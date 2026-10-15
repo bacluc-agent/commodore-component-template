@@ -4,6 +4,7 @@ on:
   pull_request:
     branches:
       - master
+  push:
 
 env:
   COMPONENT_NAME: {{ cookiecutter.slug }}
