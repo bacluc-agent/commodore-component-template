@@ -17,3 +17,53 @@ The namespace in which to deploy this component.
 ----
 namespace: example-namespace
 ----
+
+== `createNamespace`
+
+[horizontal]
+type:: boolean
+default:: `false`
+
+Whether to create the namespace. If this is set to `false`, the namespace isn't created.
+
+
+== Example
+
+[source,yaml]
+----
+createNamespace: true
+----
+
+== `namespaceLabels`
+
+[horizontal]
+type:: dict
+default:: `{}`
+
+Labels which are added to the created namespace. This parameter is only used if `createNamespace` is `true`.
+
+
+== Example
+
+[source,yaml]
+----
+namespaceLabels:
+  foo: bar
+----
+
+== `namespaceAnnotations`
+
+[horizontal]
+type:: dict
+default:: `{}`
+
+Annotations which are added to the created namespace. This parameter is only used if `createNamespace` is `true`.
+
+
+== Example
+
+[source,yaml]
+----
+namespaceAnnotations:
+  foo: bar
+----

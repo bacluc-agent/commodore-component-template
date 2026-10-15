@@ -7,4 +7,18 @@ local params = inv.parameters.{{ cookiecutter.parameter_key }};
 
 // Define outputs below
 {
+  [if params.createNamespace then '00_namespace']: kube.Namespace(params.namespace) + {
+    metadata+: {
+      labels+:
+        {
+          component: '{{ cookiecutter.slug }}',
+        }
+        + params.namespaceLabels,
+      annotations+:
+        {
+          'syn.tools/source': '{{ cookiecutter.github_url }}',
+        }
+        + params.namespaceAnnotations,
+    },
+  },
 }
