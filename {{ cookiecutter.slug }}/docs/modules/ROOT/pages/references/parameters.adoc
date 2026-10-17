@@ -22,7 +22,7 @@ namespace: example-namespace
 
 [horizontal]
 type:: boolean
-default:: `true`
+default:: `false`
 
 Whether to create the namespace. If this is set to `false`, the namespace isn't created.
 
