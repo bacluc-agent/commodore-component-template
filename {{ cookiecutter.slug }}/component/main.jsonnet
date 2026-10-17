@@ -5,9 +5,8 @@ local inv = kap.inventory();
 // The hiera parameters for the component
 local params = inv.parameters.{{ cookiecutter.parameter_key }};
 
-// Define outputs below
 {
-  [if params.createNamespace then '00_namespace']: kube.Namespace(params.namespace) + {
+  [if params.createNamespace then '00_namespace']: kube.Namespace(params.namespace) {
     metadata+: {
       labels+:
         {
