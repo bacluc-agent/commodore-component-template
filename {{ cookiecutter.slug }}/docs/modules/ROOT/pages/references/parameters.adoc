@@ -41,6 +41,7 @@ type:: dict
 default:: `{}`
 
 Labels which are added to the created namespace. This parameter is only used if `createNamespace` is `true`.
+The namespace also gets the automatically applied labels `component: <slug>` and `instance: <instance>`; values set in `namespaceLabels` take precedence over these defaults on key conflict.
 
 
 == Example
@@ -58,6 +59,7 @@ type:: dict
 default:: `{}`
 
 Annotations which are added to the created namespace. This parameter is only used if `createNamespace` is `true`.
+The namespace also gets the automatically applied annotation `syn.tools/source: <component GitHub URL>`; values set in `namespaceAnnotations` take precedence on key conflict.
 
 
 == Example
