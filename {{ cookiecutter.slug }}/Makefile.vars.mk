@@ -54,6 +54,6 @@ KUBENT_DOCKER   ?= $(DOCKER_CMD) $(DOCKER_ARGS) $(root_volume) --entrypoint=/app
 {%- endif %}
 
 instance ?= {{ test_cases[0] }}
-{%- if cookiecutter.add_matrix == "y" and cookiecutter.add_golden == "y" %}
+{%- if cookiecutter.add_golden == "y" %}
 test_instances ={% for instance in test_cases %} tests/{{instance}}.yml{% endfor %}
 {%- endif %}
