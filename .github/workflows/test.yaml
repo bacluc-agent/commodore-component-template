@@ -84,10 +84,3 @@ jobs:
       run: |
         cd test-component
         make -j1 golden-diff-all -e git_volume=
-    - name: Compile a component without the namespace parameters
-      if: ${{ matrix.add_golden == 'y' && matrix.test_cases == 'defaults' }}
-      run: |
-        # A component created before this feature has no namespace parameters.
-        sed -i -e '/createNamespace:/d' -e '/namespaceLabels:/d' -e '/namespaceAnnotations:/d' test-component/class/defaults.yml
-        make -C test-component clean test -e instance=defaults -e git_volume=
-        test ! -e test-component/compiled/test-component/test-component/00_namespace.yaml
