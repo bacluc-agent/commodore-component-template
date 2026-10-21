@@ -61,6 +61,7 @@ jobs:
           - "defaults foo"
           - "foo bar"
           - "defaults namespace"
+          - "defaults no-namespace-params"
     steps:
     - uses: actions/checkout@v6
     - uses: actions/setup-python@v6

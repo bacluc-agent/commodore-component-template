@@ -88,6 +88,16 @@ for case in test_cases.split(" "):
         with open(ng, "w", encoding="utf-8") as goldf:
             goldf.write(NAMESPACE_TEST_GOLDEN)
 
+    if case == "no-namespace-params":
+        # Remove the namespace parameters from the class defaults, to verify
+        # that the component still compiles when they aren't declared.
+        defaults_file = Path("class/defaults.yml")
+        defaults = yaml.safe_load(defaults_file.read_text())
+        parameters = defaults["parameters"]["{{ cookiecutter.parameter_key }}"]
+        for key in ("createNamespace", "namespaceLabels", "namespaceAnnotations"):
+            parameters.pop(key, None)
+        defaults_file.write_text(yaml.safe_dump(defaults, sort_keys=False))
+
 if not add_golden:
     shutil.rmtree("tests/golden")
 

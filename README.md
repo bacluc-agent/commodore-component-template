@@ -26,3 +26,8 @@ The test case `namespace` is handled specially by the Python hook: it fills
 component and creates the expected output in `tests/golden/namespace/`. Add
 `namespace` to the `test_cases` variable to test the namespace creation of a
 component.
+
+The test case `no-namespace-params` is handled specially as well: it removes the
+namespace parameters from `class/defaults.yml`, to verify that the component
+still compiles if they aren't declared. Add `no-namespace-params` to the
+`test_cases` variable to test that.
