@@ -10,14 +10,6 @@ default:: `syn-{{ cookiecutter.slug }}`
 
 The namespace in which to deploy this component.
 
-
-== Example
-
-[source,yaml]
-----
-namespace: example-namespace
-----
-
 == `createNamespace`
 
 [horizontal]
@@ -25,14 +17,6 @@ type:: boolean
 default:: `false`
 
 Whether to create the namespace. If this is set to `false`, the namespace isn't created.
-
-
-== Example
-
-[source,yaml]
-----
-createNamespace: true
-----
 
 == `namespaceLabels`
 
@@ -43,15 +27,6 @@ default:: `{}`
 Labels which are added to the created namespace. This parameter is only used if `createNamespace` is `true`.
 The namespace also gets the automatically applied labels `component: <slug>` and `instance: <instance>`; values set in `namespaceLabels` take precedence over these defaults on key conflict.
 
-
-== Example
-
-[source,yaml]
-----
-namespaceLabels:
-  foo: bar
-----
-
 == `namespaceAnnotations`
 
 [horizontal]
@@ -61,11 +36,14 @@ default:: `{}`
 Annotations which are added to the created namespace. This parameter is only used if `createNamespace` is `true`.
 The namespace also gets the automatically applied annotation `syn.tools/source: <component GitHub URL>`; values set in `namespaceAnnotations` take precedence on key conflict.
 
-
 == Example
 
 [source,yaml]
 ----
+namespace: example-namespace
+createNamespace: true
+namespaceLabels:
+  example.com/label: value
 namespaceAnnotations:
-  foo: bar
+  example.com/annotation: value
 ----
