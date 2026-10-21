@@ -20,3 +20,9 @@ However, a part of the template is managed by a custom Python hook in `hooks/pos
 
 Notably, the Python hook will generate a suitable `renovate.json` for the rendered template.
 We've switched to this approach since the logic that defines the contents of the `renovate.json` has become complex enough that templating JSON with Jinja2 isn't readable anymore.
+
+The test case `namespace` is handled specially by the Python hook: it fills
+`tests/namespace.yml` with parameters that enable the namespace creation of the
+component and creates the expected output in `tests/golden/namespace/`. Add
+`namespace` to the `test_cases` variable to test the namespace creation of a
+component.

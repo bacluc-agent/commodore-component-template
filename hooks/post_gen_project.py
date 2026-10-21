@@ -28,10 +28,41 @@ test_cases = "{{ cookiecutter.test_cases }}"
 tests_dir = Path("tests")
 tests_dir.mkdir(exist_ok=True)
 
+# Parameters and expected output of the "namespace" test case. It exercises the
+# optional namespace creation of the component, including that user provided
+# labels and annotations take precedence over the automatically applied ones.
+NAMESPACE_TEST_PARAMETERS = """parameters:
+  {{ cookiecutter.parameter_key }}:
+    createNamespace: true
+    namespaceLabels:
+      component: user-component
+      foo: bar
+    namespaceAnnotations:
+      syn.tools/source: user-source
+      baz: qux
+"""
+
+NAMESPACE_TEST_GOLDEN = """apiVersion: v1
+kind: Namespace
+metadata:
+  annotations:
+    baz: qux
+    syn.tools/source: user-source
+  labels:
+    component: user-component
+    foo: bar
+    instance: {{ cookiecutter.slug }}
+    name: syn-{{ cookiecutter.slug }}
+  name: syn-{{ cookiecutter.slug }}
+"""
+
 for case in test_cases.split(" "):
     f = tests_dir / f"{case}.yml"
     with open(f, "w", encoding="utf-8") as testf:
-        testf.write("# Overwrite parameters here\n\n# parameters: {...}\n")
+        if case == "namespace":
+            testf.write(NAMESPACE_TEST_PARAMETERS)
+        else:
+            testf.write("# Overwrite parameters here\n\n# parameters: {...}\n")
 
     g = (
         tests_dir
@@ -43,6 +74,19 @@ for case in test_cases.split(" "):
     )
     g.parent.mkdir(exist_ok=True, parents=True)
     g.touch()
+
+    if case == "namespace":
+        ng = (
+            tests_dir
+            / "golden"
+            / case
+            / "{{ cookiecutter.slug }}"
+            / "{{ cookiecutter.slug }}"
+            / "00_namespace.yaml"
+        )
+        ng.parent.mkdir(exist_ok=True, parents=True)
+        with open(ng, "w", encoding="utf-8") as goldf:
+            goldf.write(NAMESPACE_TEST_GOLDEN)
 
 if not add_golden:
     shutil.rmtree("tests/golden")
