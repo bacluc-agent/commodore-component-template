@@ -79,6 +79,9 @@ jobs:
         for t in ${{matrix.test_cases}}; do
           test -f test-component/tests/${t}.yml
         done
+        if [[ "${{matrix.test_cases}}" != *"no-namespace-params"* ]]; then
+          grep -q 'createNamespace: false' test-component/class/defaults.yml
+        fi
     - name: Run golden-diff-all
       if: ${{ matrix.add_golden == 'y' }}
       run: |
