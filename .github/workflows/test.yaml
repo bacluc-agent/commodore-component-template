@@ -6,6 +6,7 @@ on:
     paths:
       - '{{ cookiecutter.slug }}/**'
       - 'hooks/**'
+      - .github/workflows/test.yaml
 
 jobs:
   test-rendered:
@@ -79,11 +80,25 @@ jobs:
         for t in ${{matrix.test_cases}}; do
           test -f test-component/tests/${t}.yml
         done
-        if [[ "${{matrix.test_cases}}" != *"no-namespace-params"* ]]; then
-          grep -q 'createNamespace: false' test-component/class/defaults.yml
-        fi
     - name: Run golden-diff-all
       if: ${{ matrix.add_golden == 'y' }}
       run: |
         cd test-component
         make -j1 golden-diff-all -e git_volume=
+  test-default-namespace:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: 3.14
+      - uses: Gr1N/setup-poetry@v9
+      - uses: actions/cache@v5
+        with:
+          path: ~/.cache/pypoetry/virtualenvs
+          key: ${{ runner.os }}-poetry-${{ hashFiles('poetry.lock') }}
+      - run: poetry install
+      - name: Run default namespace render
+        run: |
+          make render -e cruft_extra_content='{"slug":"test-component","name":"test-component"}'
+          grep -q 'createNamespace: false' test-component/class/defaults.yml
