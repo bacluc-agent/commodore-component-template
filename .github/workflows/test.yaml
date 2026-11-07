@@ -101,4 +101,4 @@ jobs:
       - name: Run default namespace render
         run: |
           make render -e cruft_extra_content='{"slug":"test-component","name":"test-component"}'
-          grep -q 'createNamespace: false' test-component/class/defaults.yml
+          grep -Fxq '    createNamespace: false' test-component/class/defaults.yml
