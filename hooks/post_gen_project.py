@@ -56,11 +56,43 @@ metadata:
   name: syn-{{ cookiecutter.slug }}
 """
 
+# Parameters and expected output of the "namespace-defaults" test case. It
+# verifies the automatically applied namespace labels and annotations and the
+# fallback to empty overrides when the optional parameters aren't declared.
+NAMESPACE_DEFAULTS_TEST_PARAMETERS = """parameters:
+  {{ cookiecutter.parameter_key }}:
+    createNamespace: true
+"""
+
+NAMESPACE_DEFAULTS_TEST_GOLDEN = """apiVersion: v1
+kind: Namespace
+metadata:
+  annotations:
+    syn.tools/source: {{ cookiecutter.github_url }}
+  labels:
+    component: {{ cookiecutter.slug }}
+    instance: {{ cookiecutter.slug }}
+    name: syn-{{ cookiecutter.slug }}
+  name: syn-{{ cookiecutter.slug }}
+"""
+
+
+def remove_namespace_parameters(*keys):
+    defaults_file = Path("class/defaults.yml")
+    defaults = yaml.safe_load(defaults_file.read_text())
+    parameters = defaults["parameters"]["{{ cookiecutter.parameter_key }}"]
+    for key in keys:
+        parameters.pop(key, None)
+    defaults_file.write_text(yaml.safe_dump(defaults, sort_keys=False))
+
+
 for case in test_cases.split(" "):
     f = tests_dir / f"{case}.yml"
     with open(f, "w", encoding="utf-8") as testf:
         if case == "namespace":
             testf.write(NAMESPACE_TEST_PARAMETERS)
+        elif case == "namespace-defaults":
+            testf.write(NAMESPACE_DEFAULTS_TEST_PARAMETERS)
         else:
             testf.write("# Overwrite parameters here\n\n# parameters: {...}\n")
 
@@ -88,15 +120,29 @@ for case in test_cases.split(" "):
         with open(ng, "w", encoding="utf-8") as goldf:
             goldf.write(NAMESPACE_TEST_GOLDEN)
 
+    if case == "namespace-defaults":
+        ng = (
+            tests_dir
+            / "golden"
+            / case
+            / "{{ cookiecutter.slug }}"
+            / "{{ cookiecutter.slug }}"
+            / "00_namespace.yaml"
+        )
+        ng.parent.mkdir(exist_ok=True, parents=True)
+        with open(ng, "w", encoding="utf-8") as goldf:
+            goldf.write(NAMESPACE_DEFAULTS_TEST_GOLDEN)
+
+        # Remove the optional label and annotation parameters to force the
+        # fallbacks while the namespace is emitted.
+        remove_namespace_parameters("namespaceLabels", "namespaceAnnotations")
+
     if case == "no-namespace-params":
         # Remove the namespace parameters from the class defaults, to verify
         # that the component still compiles when they aren't declared.
-        defaults_file = Path("class/defaults.yml")
-        defaults = yaml.safe_load(defaults_file.read_text())
-        parameters = defaults["parameters"]["{{ cookiecutter.parameter_key }}"]
-        for key in ("createNamespace", "namespaceLabels", "namespaceAnnotations"):
-            parameters.pop(key, None)
-        defaults_file.write_text(yaml.safe_dump(defaults, sort_keys=False))
+        remove_namespace_parameters(
+            "createNamespace", "namespaceLabels", "namespaceAnnotations"
+        )
 
 if not add_golden:
     shutil.rmtree("tests/golden")

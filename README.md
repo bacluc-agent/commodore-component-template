@@ -27,6 +27,12 @@ component and creates the expected output in `tests/golden/namespace/`. Add
 `namespace` to the `test_cases` variable to test the namespace creation of a
 component.
 
+The test case `namespace-defaults` is handled specially as well: it enables
+namespace creation and removes `namespaceLabels` and `namespaceAnnotations` from
+`class/defaults.yml`, to verify the automatically applied labels and annotations
+and the fallbacks for the optional parameters. Add `namespace-defaults` to the
+`test_cases` variable to test that.
+
 The test case `no-namespace-params` is handled specially as well: it removes the
 namespace parameters from `class/defaults.yml`, to verify that the component
 still compiles if they aren't declared. Add `no-namespace-params` to the
