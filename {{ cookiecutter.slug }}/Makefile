@@ -44,7 +44,7 @@ format_jsonnet: $(JSONNET_FILES) ## Format jsonnet files
 
 .PHONY: format_editorconfig
 format_editorconfig: ## Fix EditorConfig issues
-	$(ECLINT_DOCKER) --yes eclint@$(ECLINT_VERSION) fix .
+	$(ECLINT_DOCKER) eclint@$(ECLINT_VERSION) fix .
 
 .PHONY: docs-serve
 docs-serve: ## Preview the documentation
